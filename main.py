@@ -64,7 +64,6 @@ def get_market():
             recipe['t']=now
             with urllib.request.urlopen(urllib.request.Request(f'https://universalis.app/api/v2/{moguli}/{recipe["item"]}?listings=0&entries=0', headers={'User-Agent': 'Mozilla/5.0'})) as res:
                 res_detail = json.loads(res.read())
-                recipe['current_average_price']  = res_detail['currentAveragePrice']
                 recipe['regular_sale_velocity'] = res_detail['regularSaleVelocity']
                 recipe['average_price'] = res_detail['averagePrice']
                 cost = 0
@@ -82,9 +81,9 @@ def get_market():
 
 
 def print_recipes():
-    tb = prettytable.PrettyTable(['ID', '名称', '现价', '周价', '流动', '成本', '评级'])
+    tb = prettytable.PrettyTable(['ID', '名称', '周价', '流动', '成本', '评级'])
     for recipe in recipe_list:
-        tb.add_row([recipe['item'], get_name(recipe['item']), recipe['current_average_price'], recipe['average_price'], recipe['regular_sale_velocity'], recipe['cost'], recipe['rank']])
+        tb.add_row([recipe['item'], get_name(recipe['item']), recipe['average_price'], recipe['regular_sale_velocity'], recipe['cost'], recipe['rank']])
     print(tb)
 
 
