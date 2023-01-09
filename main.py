@@ -102,7 +102,7 @@ while True:
         get_market()
         print_recipes()
         print(datetime.datetime.now())
-        time.sleep(10)
+        time.sleep(3)
         continue
     command = input('指令：')
     ls = command.split()
