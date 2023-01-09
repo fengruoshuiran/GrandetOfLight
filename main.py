@@ -58,7 +58,7 @@ def get_market():
     updated = False
     now = time.time()
     for recipe in recipe_list:
-        if ('t' not in recipe) or now-recipe['t']>300:
+        if ('t' not in recipe) or now-recipe['t']>1800:
             print('进行了请求\n')
             updated = True
             recipe['t']=now
