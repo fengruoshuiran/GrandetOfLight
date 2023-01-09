@@ -83,7 +83,8 @@ def get_market():
 def print_recipes():
     tb = prettytable.PrettyTable(['ID', '名称', '周价', '流动', '成本', '评级'])
     for recipe in recipe_list:
-        tb.add_row([recipe['item'], get_name(recipe['item']), recipe['average_price'], recipe['regular_sale_velocity'], recipe['cost'], recipe['rank']])
+        if 'regular_sale_velocity' in recipe:
+            tb.add_row([recipe['item'], get_name(recipe['item']), recipe['average_price'], recipe['regular_sale_velocity'], recipe['cost'], recipe['rank']])
     print(tb)
 
 
