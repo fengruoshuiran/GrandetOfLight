@@ -58,13 +58,16 @@ def get_market():
     updated = False
     now = time.time()
     for recipe in recipe_list:
-        if ('t' not in recipe) or now-recipe['t']>1800:
+        if ('t' not in recipe) or now-recipe['t']>300:
             print('进行了请求\n')
             updated = True
             recipe['t']=now
             with urllib.request.urlopen(urllib.request.Request(f'https://universalis.app/api/v2/{moguli}/{recipe["item"]}?listings=0&entries=0', headers={'User-Agent': 'Mozilla/5.0'})) as res:
                 res_detail = json.loads(res.read())
-                recipe['regular_sale_velocity'] = res_detail['regularSaleVelocity']
+                recipe['regular_sale_velocity'] = 0
+                for stack, number in res_detail['stackSizeHistogram'].items():
+                    recipe['regular_sale_velocity'] += float(stack) * float(number)
+                recipe['regular_sale_velocity'] /= 7
                 recipe['average_price'] = res_detail['averagePrice']
                 cost = 0
                 for material in recipe['materials']:
