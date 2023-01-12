@@ -13,6 +13,7 @@ command_help = '''
 F/f/Find: 根据名称查询物品ID
 A/a/Add: 添加一个比对市场监视，用法: Add 物品ID
 R/r/Remove: 移除一个监视
+C/c/Check: 快速查询
 S/s/Start: 开始运行
 Ctrl+c: 退出
 '''
@@ -112,8 +113,10 @@ while True:
     try:
         if ls[0]=='?' or ls[0]=='H' or ls[0]=='h':
             print(command_help)
+
         elif ls[0]=='F' or ls[0]=='f' or ls[0]=='Find':
             print(find_item(ls[1]))
+
         elif ls[0]=='A' or ls[0]=='a' or ls[0]=='Add':
             materials = []
             print('    持续输入材料id与数量, 输入E/e/End结束')
@@ -132,14 +135,27 @@ while True:
                     break
                 else:
                     materials.append({'id':item[0], 'count':item[1]})
+
         elif ls[0]=='R' or ls[0]=='r' or ls[0]=='Remove':
             for recipe in recipe_list:
                 if recipe['item']==ls[1]:
                     recipe_list.remove(recipe)
                     save_json()
                     break
+
+        elif ls[0]=='C' or ls[0]=='c' or ls[0]=='Check':
+            tb = prettytable.PrettyTable(['ID', '名称', '周价', '流动'])
+            with urllib.request.urlopen(urllib.request.Request(f'https://universalis.app/api/v2/{moguli}/{ls[1]}?listings=0&entries=0', headers={'User-Agent': 'Mozilla/5.0'})) as res:
+                res_detail = json.loads(res.read())
+                cnt = 0
+                for stack, number in res_detail['stackSizeHistogram'].items():
+                    cnt += float(stack) * float(number)
+                cnt /= 7
+                tb.add_row([ls[0], get_name(ls[0]), res_detail['averagePrice'], str(cnt)])   
+
         elif ls[0]=='S' or ls[0]=='s' or ls[0]=='Start':
             running = True
+
         else:
             print((command_help))
     except:
